@@ -1,0 +1,71 @@
+{% load static %}
+{% load ege_task_tags %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+
+    <title>{{ title }}</title>
+    <link type="text/css" href="{% static 'ege_task/css/styles.css' %}" rel="stylesheet"/>
+    <meta http-equiv="Content-Type" content="text/css" charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'ege_task/images/favicon.ico' %}" type="image/x-icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<table class="table-page" border=0 cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top">
+            {% block mainmenu %}
+            <div class="header">
+                <ul id="mainmenu" class="mainmenu">
+                    <li class="logo"><a href="{% url 'home' %}"><div class="logo"></div>
+                    </a></li>
+
+                    {% for m in menu %}
+                    {%if not forloop.last %}
+                    <li><a href="{% url m.url_name %}">{{m.title}}</a></li>
+                    {% else %}
+                    <li class="last"><a href="{% url m.url_name %}">{{m.title}}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                <div class="clear"></div>
+            </div>
+            {% endblock mainmenu %}
+            <table class="table-content" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td valign="top" class="left-chapters">
+                        <ul id="leftchapters">
+                            {% if cat_selected == 0 %}
+                                <li class="selected">Все разборы заданий</li>
+                            {% else %}
+                                <li><a href="{% url 'home' %}">Все разборы заданий</a></li>
+                            {% endif %}
+                            {% show_categories 'name' cat_selected %}
+                            <li class="share">
+
+                                <p>Наш канал</p>
+                                <a class="share-yt" href="https://t.me/alexeyteacher_chanel" target="_blank" rel="nofollow"</a>
+                            </li>
+                        </ul>
+                    </td>
+                    <td valign="top" class="content">
+                        {% block breadcrumbs %}
+                        {% endblock %}
+
+                        <div class="content-text">
+                            {% block content %}
+                            {% endblock %}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+    <tr>
+        <td valign="top">
+            <div id="footer">
+                <p align="center"> Сайт мой, берите, что хотите ;)</p>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

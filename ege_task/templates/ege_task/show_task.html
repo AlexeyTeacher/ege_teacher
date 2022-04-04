@@ -1,0 +1,11 @@
+{% extends "ege_task/base.html" %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+    {% if task.video_url %}
+        <iframe width="840" height="472" src="{{task.video_url}}" title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+    {% endif %}
+    {{task.content|linebreaks}}
+{% endblock %}
