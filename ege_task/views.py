@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import AddTaskForm
+from .forms import AddTaskForm, RegisterUserForm
 from .models import *
 from .utils import *
 
@@ -91,12 +91,14 @@ class EgeTaskCategory(DataMixin, ListView):
         context.update(c_def)
         return context
 
-# def show_category(request, cat_id):
-#     posts = Task.objects.filter(cat_id=cat_id)
-#     if len(posts) == 0:
-#         raise Http404
-#     context = {'posts': posts,
-#                'title': 'Отображение по рубрикам',
-#                'cat_selected': cat_id
-#                }
-#     return render(request, "ege_task/index.html", context=context)
+
+class RegisterUser(DataMixin, CreateView):
+    form_class = RegisterUserForm
+    template_name = 'ege_task/register.html'
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Регистрация')
+        context.update(c_def)
+        return context
