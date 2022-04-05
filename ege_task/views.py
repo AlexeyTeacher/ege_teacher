@@ -30,12 +30,6 @@ def about(request):
     return render(request, "ege_task/about.html", {'title': "О сайте", 'menu': user_menu})
 
 
-# class ShowTask(DetailView):
-#     model = Task
-#     template_name = 'ege_task/show_task.html'
-#     slug_field = 'number_task_slug'
-
-
 def show_task(request, number_task):
     task = get_object_or_404(Task, number_task=number_task)
     if task.video_url:
