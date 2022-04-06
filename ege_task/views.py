@@ -3,9 +3,9 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import AddTaskForm, RegisterUserForm, LoginUserForm
+from .forms import AddTaskForm, RegisterUserForm, LoginUserForm, ContactForm
 from .models import *
 from .utils import *
 
@@ -16,7 +16,7 @@ class EgeTaskHome(DataMixin, ListView):
     context_object_name = 'posts'
 
     def get_queryset(self):
-        return Task.objects.filter(is_published=True)
+        return Task.objects.filter(is_published=True).select_related('cat')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -69,8 +69,20 @@ class AddTask(LoginRequiredMixin, DataMixin, CreateView):
         return context
 
 
-def contact(request):
-    return render(request, "ege_task/contact.html", {'title': "Обратная связь"})
+class ContactFormView(DataMixin, FormView):
+    form_class = ContactForm
+    template_name = 'ege_task/contact.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Обратная связь')
+        context.update(c_def)
+        return context
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return redirect('home')
 
 
 class EgeTaskCategory(DataMixin, ListView):
@@ -80,7 +92,7 @@ class EgeTaskCategory(DataMixin, ListView):
     allow_empty = False
 
     def get_queryset(self):
-        return Task.objects.filter(is_published=True, cat__id=self.kwargs['cat_id'])
+        return Task.objects.filter(is_published=True, cat__id=self.kwargs['cat_id']).select_related('cat')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

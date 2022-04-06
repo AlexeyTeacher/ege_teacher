@@ -4,7 +4,7 @@ from .views import *
 urlpatterns = [
     path('', EgeTaskHome.as_view(), name='home'),
     path('about/', about, name='about'),
-    path('contact/', contact, name='contact'),
+    path('contact/', ContactFormView.as_view(), name='contact'),
     path('add_task/', AddTask.as_view(), name='add_task'),
     path('login/', LoginUser.as_view(), name='login'),
     path('logout/', logout_user, name='logout'),
